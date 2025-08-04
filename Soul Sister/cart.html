@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+<div id="cart-list"></div>
+<div id="cart-total"></div>
+<script src="main.js"></script>
+<script>
+fetch('cart.php')
+  .then(res => res.json())
+  .then(items => {
+    let html = '';
+    let total = 0;
+    for(const item of items){
+      html += `<div>
+        ${item.name} - $${item.price} (x${item.quantity})
+        <button onclick="removeFromCart(${item.id})">Remove</button>
+      </div>`;
+      total += item.price * item.quantity;
+    }
+    document.getElementById('cart-list').innerHTML = html;
+    document.getElementById('cart-total').innerText = 'Total: $' + total.toFixed(2);
+  });
+
+function removeFromCart(cartItemId){
+  fetch('cart.php', {
+    method:'DELETE',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({cart_item_id: cartItemId})
+  }).then(r=>r.json()).then(r=>location.reload());
+}
+</script></body></html>

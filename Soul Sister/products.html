@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+</head>
+<body>
+   
+<div id="products-list"></div>
+<script src="main.js"></script>
+<script>
+fetch('products.php')
+  .then(res => res.json())
+  .then(products => {
+    let html = '';
+    for(const p of products){
+      html += `
+        <div class="product-card">
+          <h3>${p.name}</h3>
+          <div><b>Brand:</b> ${p.brand_name}</div>
+          <div>
+            ${[p.image1, p.image2, p.image3, p.image4].filter(Boolean).map(img =>
+              `<img src="${img}" style="max-width:120px;">`
+            ).join('')}
+          </div>
+          <p>${p.description}</p>
+          <p>Price: $${p.price}</p>
+          <button onclick="addToCart(${p.id})">Add to Cart</button>
+          <button onclick="addToFav(${p.id})">❤️</button>
+        </div>
+      `;
+    }
+    document.getElementById('products-list').innerHTML = html;
+  });
+</script>
+</body>
+</html>
